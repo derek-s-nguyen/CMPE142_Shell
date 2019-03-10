@@ -29,6 +29,5 @@ main(int argc, char *argv[])
     printf("yey\n");
     }
   }
-
-return 0;
+  return 0;
 }
