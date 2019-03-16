@@ -13,7 +13,7 @@ int forknife_exit(char **args);
 We are going to have built-in commands in a char array. Then, have a pointer function where the commands will have the corresponding functions.
 */
 
-char *built_ins[] ={ "cd", "exit"};
+char *builtin_str[] ={ "cd", "exit"};
 char (*builds_ins_functions)(char **) = {
  &forknife_cd, &forknife_exit
 };
@@ -22,11 +22,11 @@ char (*builds_ins_functions)(char **) = {
 int forknife_cd(char **args){
 
 if(args[1] == NULL){
-fprintf(stdrr, "forknife: expected argument to \"cd\"\n");
+fprintf(stderr, "forknife: expected argument to \"cd\"\n");
 }
 
 else{
-if(chdir(arg[1]) != 0){
+if(chdir(args[1]) != 0){
 perror("forknife");
 }
 }
@@ -76,7 +76,7 @@ int forknife_execute(char **args)
 	}
 	for(i = 0; i < forknife_num_builtins(); i++) {
 		if(strcmp(args[0], builtin_str[i]) == 0) {
-			return (*builtin_func[i]))(args);
+			return (*builtin_func[i])(args);
 		}
 	}
 	return forknife_launch(args);
@@ -104,7 +104,7 @@ char **forknife_split_line(char *line){
 		exit(EXIT_FAILURE);
 	}
 
-	token = strsep(line, FORKNIFE_TOK_DELIM);
+	token = strsep(line, FORKNIFE_TOK_TOK_DELIM);
 	while(token != NULL){
 		tokens[position] = token;
 		position++;	
@@ -113,15 +113,15 @@ char **forknife_split_line(char *line){
 		bufsize += FORKNIFE_TOK_BUFSIZE;
 		tokens = realloc(tokens, bufsize * sizeof(char*));
 		if(!tokens) {
-			fprintf(strderr, "allocation error\n");
+			fprintf(stderr, "allocation error\n");
 			exit(EXIT_FAILURE);
 		}
 	}
 	
-	token = strsep(NULL, FORKNIFE_TOK_DELIM);
+	token = strsep(NULL, FORKNIFE_TOK__TOK_DELIM);
 	
 	}//while
-	tokens[positions] = NULL;
+	tokens[position] = NULL;
 	return tokens;
 }//splitline
 
