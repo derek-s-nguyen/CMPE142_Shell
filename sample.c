@@ -105,7 +105,7 @@ char **forknife_split_line(char *line){
 		exit(EXIT_FAILURE);
 	}
 
-	token = strsep(line, FORKNIFE_TOK_TOK_DELIM);
+	token = strtok(line, FORKNIFE_TOK_TOK_DELIM);
 	while(token != NULL){
 		tokens[position] = token;
 		position++;	
@@ -119,7 +119,7 @@ char **forknife_split_line(char *line){
 		}
 	}
 	
-	token = strsep(NULL, FORKNIFE_TOK__TOK_DELIM);
+	token = strtok(NULL, FORKNIFE_TOK_TOK_DELIM);
 	
 	}//while
 	tokens[position] = NULL;
@@ -135,7 +135,7 @@ void forknife_loop(void) {
 		printf(">");
 		line = forknife_read_line();
 		args = forknife_split_line(line);
-		status = forknife_exectute(args);
+		status = forknife_execute(args);
 
 		free(line);
 		free(args);
