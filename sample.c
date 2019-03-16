@@ -4,8 +4,37 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
-int
-main(int argc, char**argv)
+
+int forknife_cd(char **args);
+int forknife_exit(char **args);
+
+
+/*
+We are going to have built-in commands in a char array. Then, have a pointer function where the commands will have the corresponding functions.
+*/
+
+char *built_ins[] ={ "cd", "exit"};
+char (*builds_ins_functions)(char **) = {
+ &forknife_cd, &forknife_exit
+};
+
+
+int forknife_cd(char **args){
+
+if(args[1] == NULL){
+fprintf(stdrr, "forknife: expected argument to \cd\");
+}
+
+else{
+if(chdir(arg[1]) != 0){
+perror("forknife");
+}
+}
+
+return 1;
+}
+
+int main(int argc, char**argv)
 { 
 	char *line = NULL;
 	size_t linesize = 0;
