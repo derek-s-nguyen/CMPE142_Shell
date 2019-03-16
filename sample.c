@@ -132,7 +132,7 @@ void forknife_loop(void) {
 	int status;
 
 	do{
-		printf(">");
+		printf("forknife>");
 		line = forknife_read_line();
 		args = forknife_split_line(line);
 		status = forknife_execute(args);
