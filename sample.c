@@ -22,7 +22,7 @@ char (*builds_ins_functions)(char **) = {
 int forknife_cd(char **args){
 
 if(args[1] == NULL){
-fprintf(stdrr, "forknife: expected argument to \cd\");
+fprintf(stdrr, "forknife: expected argument to \"cd\"\n");
 }
 
 else{
