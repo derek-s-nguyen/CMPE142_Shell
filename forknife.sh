@@ -1,4 +1,4 @@
 #! /bin/bash
 
-gcc sample.c -o sample
-./sample
+gcc main.c -o main
+./main
