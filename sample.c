@@ -119,7 +119,7 @@ char **forknife_split_line(char *line){
 		}
 	}
 	
-	token = strsep(NULL, FORKNIFE_TOK__TOK_DELIM);
+	token = strsep(NULL, FORKNIFE_TOK_TOK_DELIM);
 	
 	}//while
 	tokens[position] = NULL;
