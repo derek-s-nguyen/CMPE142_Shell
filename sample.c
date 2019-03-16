@@ -119,7 +119,11 @@ char **forknife_split_line(char *line){
 		}
 	}
 	
+<<<<<<< HEAD
 	token = strtok(NULL, FORKNIFE_TOK_TOK_DELIM);
+=======
+	token = strsep(NULL, FORKNIFE_TOK_TOK_DELIM);
+>>>>>>> 33ac27dcd53e7c0d73ca9ab190197c620443b066
 	
 	}//while
 	tokens[position] = NULL;
