@@ -81,6 +81,7 @@ int forknife_execute(char **args)
 	}
 	return forknife_launch(args);
 }
+
 #define FORKNIFE_RL_BUFSIZE 1024
 char *forknife_read_line(void)
 {
@@ -90,52 +91,64 @@ char *forknife_read_line(void)
 	return line;
 }
 
-int main(int argc, char**argv)
-{ 
-	char *line = NULL;
-	size_t linesize = 0;
-	size_t linelen;
-	char cwd[1024];
-	getcwd(cwd, sizeof(cwd));
-	printf("\nDir: %s",cwd);	
-	printf("\nHello! Welcome to Forknife! You're about to have a dabbing good time!\n");
-	
-	while((linelen = getline(&line, &linesize, stdin)) != -1){
-		if(strncmp("exit", line, 4) == 0) {
-			printf("Goodbye :^) \n");
-			exit(0);
-		}
-		
-		fwrite(line, linelen, 1, stdout);
-		
-		/*//forking child
-		pid_t pid = fork();
+#define FORKNIFE_TOK_BUFSIZE 64
+#define FORKNIFE_TOK_TOK_DELIM " \t\r\n\a"
 
-		if(pid == -1){//forking failed
-			printf("\nForking child failed");
-			return 0;
-		} 
-		else if(pid == 0) {//processing typed in command 
-			if (execvp(argv[0], argv) < 0){
-				printf("\nCould not execute command");
-			}
-		exit(0);
-		}
-		else {//waiting for child to terminate 
-			wait(NULL);
-			return 0;
-		}
+char **forknife_split_line(char *line){
+	int bufsize = FORKNIFE_TOK_BUFSIZE, position = 0;
+	char **tokens = malloc(bufsize * sizeof(char*));
+	char *token;
 
-
-
-		//if child, exec
-		//if parent, wait
-	  */
-	  }
-
-	free(line);
-	if(ferror(stdin)) {
-		err(1,"getline");
+	if(!token){
+		fprintf(stderr, "allocation error\n");
+		exit(EXIT_FAILURE);
 	}
 
+	token = strsep(line, FORKNIFE_TOK_DELIM);
+	while(token != NULL){
+		tokens[position] = token;
+		position++;	
+
+	if(position >= bufsize) {
+		bufsize += FORKNIFE_TOK_BUFSIZE;
+		tokens = realloc(tokens, bufsize * sizeof(char*));
+		if(!tokens) {
+			fprintf(strderr, "allocation error\n");
+			exit(EXIT_FAILURE);
+		}
+	}
+	
+	token = strsep(NULL, FORKNIFE_TOK_DELIM);
+	
+	}//while
+	tokens[positions] = NULL;
+	return tokens;
+}//splitline
+
+void forknife_loop(void) {
+	char *line;
+	char **args;
+	int status;
+
+	do{
+		printf(">");
+		line = forknife_read_line();
+		args = forknife_split_line(line);
+		status = forknife_exectute(args);
+
+		free(line);
+		free(args);
+
+	}while (status);
+
+}//forknife_loop
+
+int main(int argc, char **argv) {
+
+
+	forknife_loop();
+
+	return EXIT_SUCCESS;
+
 }
+
