@@ -14,8 +14,9 @@ We are going to have built-in commands in a char array. Then, have a pointer fun
 */
 
 char *builtin_str[] ={ "cd", "exit"};
-char (*builds_ins_functions)(char **) = {
- &forknife_cd, &forknife_exit
+int (*builtin_func[])(char **) = {
+	&forknife_cd,
+	&forknife_exit
 };
 
 
