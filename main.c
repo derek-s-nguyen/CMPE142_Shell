@@ -4,18 +4,19 @@
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
+#include <sys/types.h>
 
 int forknife_cd(char **args);
+int forknife_path(char **args);
 int forknife_exit(char **args);
+char path[512] = "/bin";
 
-
-/*
-We are going to have built-in commands in a char array. Then, have a pointer function where the commands will have the corresponding functions.
-*/
-
-char *builtin_str[] ={ "cd", "exit"};
+//built-in commands are placed into the char array 'builtin_str[]'
+//the pointer function 'builtin_func[]' contains the commands and corresponding functions
+char *builtin_str[] ={ "cd", "path", "exit"};
 int (*builtin_func[])(char **) = {
 	&forknife_cd,
+	&forknife_path,
 	&forknife_exit
 };
 
@@ -34,7 +35,22 @@ perror("forknife");
 
 return 1;
 }
+//this is a built-in command to change the path
+int forknife_path(char **args){
+	int counter = 0;
+	char wholename[512];
+	char *next_piece;
+	if (args[1] == NULL){
+		fprintf(stderr, "forknife: expected argument to \"path\"\n");
+	}
+	else{
+		char *trunc_args;
+		trunc_args = args[1];
+		strncpy(path, trunc_args, 511);
+	}
 
+	return 1;
+}
 //this is a built-in command to exit by returning zero
 int forknife_exit(char **args)
 {
@@ -45,24 +61,53 @@ int forknife_launch(char **args)
 {
 	pid_t pid;
 	int status;
-
-	pid = fork();
-	if (pid == 0) {
-		//child process
-		if(execvp(args[0], args) == -1) {
-			perror("forknife");
-		}
-		exit(EXIT_FAILURE);
-	} else if (pid < 0) {
-		//error forking
-		perror("forknife");
-	} else {
-		//parent process
-		do {
-			waitpid(pid, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	int counter = 1;
+	char path_token;
+	int execute_found = 0;
+	printf("path variable currently contains: %s\n", path);
+/*	
+	snprintf(path_token, 511, "%s/%s", &path[0], *args);
+	if(access(path_token, X_OK) == 0) {	
+		execute_found = 1;
+		printf("yey, you're good!\n");
 	}
-	return 1;
+	else {
+		while (access(path_token, X_OK) != 0) {//while can't find executable
+			snprintf(path_token, 511, "%s/%s", &path[counter], *args);//check next directive
+			if(access(path_token, X_OK) == 0) {	
+				execute_found = 1;
+				printf("yey, you're good!\n");
+				break;
+			}
+			counter++;
+		}
+	}
+*/
+//	if(execute_found) {
+//		printf("2nd time: yey, you're good!\n");
+		pid = fork();
+		if (pid == 0) {
+			//child process
+			if(execvp(args[0], args) == -1) {
+				perror("forknife");
+			}
+			exit(EXIT_FAILURE);
+		} else if (pid < 0) {
+			//error forking
+			perror("forknife");
+		} else {
+			//parent process
+			do {
+				waitpid(pid, &status, WUNTRACED);
+			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+		}
+		return 1;
+/*	}
+	else {
+		perror("forknife");
+		return 1;
+	}
+*/
 }
 int forknife_num_builtins() {
 	return sizeof(builtin_str) / sizeof(char *);
@@ -76,11 +121,11 @@ int forknife_execute(char **args)
 		return 1;
 	}
 	for(i = 0; i < forknife_num_builtins(); i++) {
-		if(strcmp(args[0], builtin_str[i]) == 0) {
+		if(strcmp(args[0], builtin_str[i]) == 0) {//if the command is built-in
 			return (*builtin_func[i])(args);
 		}
 	}
-	return forknife_launch(args);
+	return forknife_launch(args);//otherwise, execv
 }
 
 #define FORKNIFE_RL_BUFSIZE 1024
@@ -145,7 +190,6 @@ void forknife_loop(void) {
 }//forknife_loop
 
 int main(int argc, char **argv) {
-
 
 	forknife_loop();
 
