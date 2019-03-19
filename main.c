@@ -62,11 +62,15 @@ int forknife_launch(char **args)
 	int status;
 	int found = 0;
 	char wholename[512];
+	char temp[512];
 	char *next_piece;
+
+	strncpy(temp, path, 511);
+
 	printf("path variable currently contains: %s\n", path);
-	next_piece = strtok(path, ":");
+	next_piece = strtok(temp, ":");
 	printf("next directory to check with 'access()': %s\n", next_piece);
-	
+
 	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 	printf("Looking for: %s\n", wholename);
 	if(access(wholename, X_OK) == 0) {
@@ -86,7 +90,6 @@ int forknife_launch(char **args)
 			}
 		}
 	}
-
 	if(found) {
 		printf("Gonna fork and execv for: %s\n", wholename);
 		pid = fork();
