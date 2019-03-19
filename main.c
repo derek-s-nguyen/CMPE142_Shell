@@ -60,10 +60,34 @@ int forknife_launch(char **args)
 {
 	pid_t pid;
 	int status;
-	int counter = 1;
-	char path_token;
+	int found = 0;
+	char wholename[512];
+	char *next_piece;
 	int execute_found = 0;
 	printf("path variable currently contains: %s\n", path);
+	next_piece = strtok(path, ":");
+	printf("next directory to check with 'access()': %s\n", next_piece);
+	
+	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);//try *args[0], args, *args
+	printf("Looking for: %s\n", wholename);
+	if(access(wholename, X_OK) == 0) {
+		printf("YAY, found executable in: %s\n", wholename);
+		found = 1;//found executable
+	}
+	else {
+		while(next_piece != NULL) {
+			next_piece = strtok(NULL, ":");
+			printf("next directory to check with 'access()': %s\n", next_piece);
+			snprintf(wholename, 511, "%s/%s", next_piece, args[0]);//try *args[0], args, *args
+			printf("Looking for: %s\n", wholename);
+			if(access(wholename, X_OK) == 0) {
+				printf("YAY, found executable in: %s\n", wholename);
+				found = 1;//found executable
+				break;
+			}
+		}
+	}
+		
 /*	
 	snprintf(path_token, 511, "%s/%s", &path[0], *args);
 	if(access(path_token, X_OK) == 0) {	
