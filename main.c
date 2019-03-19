@@ -36,14 +36,11 @@ return 1;
 }
 //this is a built-in command to change the path
 int forknife_path(char **args){
-	int counter = 0;
-	char wholename[512];
-	char *next_piece;
+	char *trunc_args;
 	if (args[1] == NULL){
 		fprintf(stderr, "forknife: expected argument to \"path\"\n");
 	}
 	else{
-		char *trunc_args;
 		trunc_args = args[1];
 		strncpy(path, trunc_args, 511);
 	}
@@ -63,12 +60,11 @@ int forknife_launch(char **args)
 	int found = 0;
 	char wholename[512];
 	char *next_piece;
-	int execute_found = 0;
 	printf("path variable currently contains: %s\n", path);
 	next_piece = strtok(path, ":");
 	printf("next directory to check with 'access()': %s\n", next_piece);
 	
-	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);//try *args[0], args, *args
+	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 	printf("Looking for: %s\n", wholename);
 	if(access(wholename, X_OK) == 0) {
 		printf("YAY, found executable in: %s\n", wholename);
@@ -78,7 +74,7 @@ int forknife_launch(char **args)
 		while(next_piece != NULL) {
 			next_piece = strtok(NULL, ":");
 			printf("next directory to check with 'access()': %s\n", next_piece);
-			snprintf(wholename, 511, "%s/%s", next_piece, args[0]);//try *args[0], args, *args
+			snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 			printf("Looking for: %s\n", wholename);
 			if(access(wholename, X_OK) == 0) {
 				printf("YAY, found executable in: %s\n", wholename);
@@ -87,31 +83,13 @@ int forknife_launch(char **args)
 			}
 		}
 	}
-		
-/*	
-	snprintf(path_token, 511, "%s/%s", &path[0], *args);
-	if(access(path_token, X_OK) == 0) {	
-		execute_found = 1;
-		printf("yey, you're good!\n");
-	}
-	else {
-		while (access(path_token, X_OK) != 0) {//while can't find executable
-			snprintf(path_token, 511, "%s/%s", &path[counter], *args);//check next directive
-			if(access(path_token, X_OK) == 0) {	
-				execute_found = 1;
-				printf("yey, you're good!\n");
-				break;
-			}
-			counter++;
-		}
-	}
-*/
-//	if(execute_found) {
-//		printf("2nd time: yey, you're good!\n");
+
+	if(found) {
+		printf("Gonna fork and execv for: %s\n", wholename);
 		pid = fork();
 		if (pid == 0) {
 			//child process
-			if(execvp(args[0], args) == -1) {
+			if(execv(wholename, args) == -1) {
 				perror("forknife");
 			}
 			exit(EXIT_FAILURE);
@@ -125,12 +103,12 @@ int forknife_launch(char **args)
 			} while (!WIFEXITED(status) && !WIFSIGNALED(status));
 		}
 		return 1;
-/*	}
+	}
 	else {
 		perror("forknife");
 		return 1;
 	}
-*/
+
 }
 int forknife_num_builtins() {
 	return sizeof(builtin_str) / sizeof(char *);
