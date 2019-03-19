@@ -37,9 +37,10 @@ return 1;
 //this is a built-in command to change the path
 int forknife_path(char **args){
 	char *trunc_args;
+	char null = '\0';
 
 	if (args[1] == NULL){
-		path[0] = NULL;
+		path[0] = null;
 //		fprintf(stderr, "forknife: expected argument to \"path\"\n");
 	}
 	else{
@@ -79,7 +80,7 @@ int forknife_launch(char **args)
 	}
 	else {
 		while(next_piece != NULL) {
-			next_piece = strtok(NULL, ": ");
+			next_piece = strtok(NULL, ":");
 			printf("next directory to check with 'access()': %s\n", next_piece);
 			snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 			printf("Looking for: %s\n", wholename);
