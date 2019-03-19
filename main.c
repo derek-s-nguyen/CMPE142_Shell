@@ -11,20 +11,16 @@
 int forknife_cd(char **args);
 int forknife_path(char **args);
 int forknife_exit(char **args);
-int forknife_ls(char **args);
 char path[512] = "/bin";
 
 //built-in commands are placed into the char array 'builtin_str[]'
 //the pointer function 'builtin_func[]' contains the commands and corresponding functions
-char *builtin_str[] ={ "cd", "path", "exit", "ls"};
+char *builtin_str[] ={ "cd", "path", "exit" };
 int (*builtin_func[])(char **) = {
 	&forknife_cd,
 	&forknife_path,
-	&forknife_exit,
-	&forknife_ls
+	&forknife_exit
 };
-
-
 int forknife_cd(char **args){
 
 if(args[1] == NULL){
@@ -36,7 +32,6 @@ if(chdir(args[1]) != 0){
 perror("forknife");
 }
 }
-
 return 1;
 }
 //this is a built-in command to change the path
@@ -55,28 +50,6 @@ int forknife_path(char **args){
 
 	return 1;
 }
-
-
-int forknife_ls(char **args){
-char directory_name[512];
-DIR*p;
-struct dirent *d;
-printf("Enter directory name:\n");
-scanf("%s",directory_name);
-p=opendir(directory_name);
-if(p==NULL)
-  {
-  perror("Cannot find directory");
-  exit(-1);
-  }
-while(d=readdir(p)){
-  printf("%s\n",d->d_name);
-}
-return 1;
-
-}
-
-
 //this is a built-in command to exit by returning zero
 int forknife_exit(char **args)
 {
@@ -147,8 +120,7 @@ int forknife_execute(char **args)
 		return 1;
 	}
 	for(i = 0; i < forknife_num_builtins(); i++) {
-		if(strcmp(args[0], builtin_str[i]) == 0) {
-//if the command is built-in
+		if(strcmp(args[0], builtin_str[i]) == 0) {//if the command is built-in
 			return (*builtin_func[i])(args);
 		}
 	}
