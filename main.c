@@ -36,7 +36,7 @@ return 1;
 }
 //this is a built-in command to change the path
 int forknife_path(char **args){
-	char *trunc_args;
+	int counter = 1;
 	char null = '\0';
 
 	if (args[1] == NULL){
@@ -44,9 +44,12 @@ int forknife_path(char **args){
 //		fprintf(stderr, "forknife: expected argument to \"path\"\n");
 	}
 	else{
-
-		trunc_args = args[1];
-		strncpy(path, trunc_args, 511);
+		path[0] = null;
+		while(args[counter] != NULL){
+			strcat(path, args[counter]);
+			strcat(path, ":");
+			counter = (counter + 1);
+		}
 	}
 
 	return 1;
