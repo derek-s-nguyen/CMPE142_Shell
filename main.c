@@ -41,7 +41,6 @@ int forknife_path(char **args){
 
 	if (args[1] == NULL){
 		path[0] = null;
-//		fprintf(stderr, "forknife: expected argument to \"path\"\n");
 	}
 	else{
 		path[0] = null;
@@ -51,7 +50,6 @@ int forknife_path(char **args){
 			counter = (counter + 1);
 		}
 	}
-
 	return 1;
 }
 //this is a built-in command to exit by returning zero
