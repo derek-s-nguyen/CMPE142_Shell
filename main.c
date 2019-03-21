@@ -77,12 +77,11 @@ int forknife_launch(char **args)
 
 	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 	printf("Looking for: %s\n", wholename);
-
 	if(access(wholename, X_OK) == 0) {
 		printf("YAY, found executable in: %s\n", wholename);
 		found = 1;//found executable
 	}
-	else { //we didn't find the executable yet
+	else {
 		while(next_piece != NULL) {
 			next_piece = strtok(NULL, ":");
 			printf("next directory to check with 'access()': %s\n", next_piece);
@@ -103,34 +102,11 @@ int forknife_launch(char **args)
 			if(execv(wholename, args) == -1) {
 				perror("forknife");
 			}
-			for(int i = 0; i<strlen(args); i++){
-				if(args[i] == "<"){
-				close(STDIN_FILENO); 
-				open("./main.input", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-				char *myargs[3];
-        		myargs[0] = strdup("pid");  
-        		myargs[1] = strdup("main.c"); // argument: file to count
-        		myargs[2] = NULL;           // marks end of array
-        		execvp(myargs[0], myargs);  // runs word count
-			}
-			else if(args[i]== ">"){
-				close(STDOUT_FILENO); 
-				open("./main.output", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-				char *myargs[3];
-        		myargs[0] = strdup("pid");  
-        		myargs[1] = strdup("main.c"); 
-        		myargs[2] = NULL;          
-        		execvp(myargs[0], myargs);  
-			}
-			
-		}
 			exit(EXIT_FAILURE);
-		}
-		else if (pid < 0) {
+		} else if (pid < 0) {
 			//error forking
 			perror("forknife");
-		}
-		else {
+		} else {
 			//parent process
 			do {
 				waitpid(pid, &status, WUNTRACED);
@@ -138,9 +114,7 @@ int forknife_launch(char **args)
 		}
 		return 1;
 	}
-	else { //it cannot be found at all
-		int wc = wait(NULL);
-		assert(wc >= 0);
+	else {
 		perror("forknife");
 		return 1;
 	}
