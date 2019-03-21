@@ -64,8 +64,8 @@ int forknife_launch(char **args)
 {
 	pid_t pid;
 
-	char right_arrow[3] = ">", left_arrow[3] = "<", null = '\0', out_file[512], in_file[512];
-	int redir_input = 0, redir_output = 0, in_counter = 0, out_counter = 0;
+	char right_arrow[3] = ">", null = '\0', out_file[512];
+	int  redir_output = 0, out_counter = 0;
 
 	int status;
 	int found = 0;
@@ -73,31 +73,25 @@ int forknife_launch(char **args)
 	char temp[512];
 	char *next_piece;
 
-	//checking for left arrow (input)
+	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
-		if(strcmp(args[out_counter], right_arrow) == 0){
+		
+		if(strcmp(args[out_counter], right_arrow) == 0) {
+			
+			
 			//found >
 			out_file[0] = null;
 			printf("You want to redirect output, huh\n");
 			strcat(out_file, args[(out_counter+1)]);//put the file name into out_file
 			printf("This is where you said you want output going to: %s\n", out_file);
+			//right_arrow_counter = 0;
 			break;
-		}
+	
+	}
+
 		out_counter = (out_counter + 1);
 	}
 
-	//checking for right arrow (output)
-	while(args[in_counter] != NULL){
-		if(strcmp(args[in_counter], left_arrow) == 0){
-			//found >
-			in_file[0] = null;
-			printf("You want to redirect output, huh\n");
-			strcat(in_file, args[(in_counter+1)]);//put the file name into out_file
-			printf("This is where you said you want input coming from: %s\n", in_file);
-			break;
-		}
-		in_counter = (in_counter + 1);
-	}
 
 	strncpy(temp, path, 511);
 
