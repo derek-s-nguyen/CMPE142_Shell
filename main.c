@@ -35,13 +35,13 @@ int (*builtin_func[])(char **) = {
 int forknife_cd(char **args){
 
 if(args[1] == NULL){
-print_error();
+	print_error();
 }
 
 else{
-if(chdir(args[1]) != 0){
-perror("forknife");
-}
+	if(chdir(args[1]) != 0){
+		print_error();
+	}
 }
 return 1;
 }
@@ -102,7 +102,7 @@ int forknife_launch(char **args)
 	// printf("%s \n", parallel_cmd);
 	
 	//do the parallel commands in here
-	if(ampersand_found ==true){
+	if(ampersand_found == true){
 		/*can either store the tokens in the parallel command arrray, find the executable, and fork and exec like usual
 		OR immediately run a command once we find one */
 	}
