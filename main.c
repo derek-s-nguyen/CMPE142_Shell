@@ -99,7 +99,13 @@ int forknife_launch(char **args)
 		parallel_counter++;
 	}
 	
-	printf("%s \n", parallel_cmd);
+	// printf("%s \n", parallel_cmd);
+	
+	//do the parallel commands in here
+	if(ampersand_found ==true){
+		/*can either store the tokens in the parallel command arrray, find the executable, and fork and exec like usual
+		OR immediately run a command once we find one */
+	}
 
 	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
@@ -140,7 +146,7 @@ int forknife_launch(char **args)
 			printf("Looking for: %s\n", wholename);
 			if(access(wholename, X_OK) == 0) {
 				printf("YAY, found executable in: %s\n", wholename);
-				found = 1;//found executable
+				found = 1; //found executable
 				break;
 			}
 		}
