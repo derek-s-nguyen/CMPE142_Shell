@@ -135,15 +135,12 @@ int forknife_launch(char **args)
 	printf("%s\n", next_piece);
 
 	if(access(wholename, X_OK) == 0) {
-		printf("YAY, found executable in: %s\n", wholename);
 		found = 1;//found executable
 	}
 	else {
 		while(next_piece != NULL) {
 			next_piece = strtok(NULL, ":");
-			printf("next directory to check with 'access()': %s\n", next_piece);
 			snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
-			printf("Looking for: %s\n", wholename);
 			if(access(wholename, X_OK) == 0) {
 				printf("YAY, found executable in: %s\n", wholename);
 				found = 1; //found executable
@@ -152,16 +149,12 @@ int forknife_launch(char **args)
 		}
 	}
 	if(found) {
-		printf("Gonna fork and execv for: %s\n", wholename);
 		pid = fork();
-		printf("should be redircting \n");
 		if (pid == 0) {
 			//child process
-			if(carrot_found == true){
-				printf("found carrot\n");
+			if(carrot_found == true){	
 				close(STDOUT_FILENO); 
 				int fd = open(out_file, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-				printf("This printed into an output file");
 				printf("%d \n", fd);
 				int save_stdout = dup(1);
 				int save_stderr = dup(2);
@@ -169,7 +162,7 @@ int forknife_launch(char **args)
 				dup2(fd, 2);
 		
 				if(fd < 0){
-					printf("FILE ERROR");
+					print_error();
 				}
 				char *myargs[2] = {wholename, NULL};
 							
@@ -179,12 +172,12 @@ int forknife_launch(char **args)
 				dup2(save_stderr, fd);
 			}
 			else if(execv(wholename, args) == -1) {
-				perror("forknife");
+				print_error();
 			}
 			exit(EXIT_FAILURE);
 		} else if (pid < 0) {
 			//error forking
-			perror("forknife");
+			print_error();
 		} else {
 			//parent process
 			do {
@@ -194,7 +187,7 @@ int forknife_launch(char **args)
 		return 1;
 	}
 	else {
-		perror("forknife");
+		print_error();
 		return 1;
 	}
 
@@ -243,7 +236,6 @@ char **forknife_split_line(char *line){
 	token = strtok(line, FORKNIFE_TOK_TOK_DELIM);
 	while(token != NULL){
 		tokens[position] = token;
-		printf("%s \n", tokens[position]);
 		position++;	
 
 	if(position >= bufsize) {
