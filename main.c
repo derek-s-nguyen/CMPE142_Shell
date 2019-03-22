@@ -116,14 +116,6 @@ int forknife_launch(char **args)
 	for(int f = 0; f <= arry_counter; f++){
 		printf("Argument %d: %s\n", f, parallel_args[f]);
 	}
-	
-	// printf("%s \n", parallel_cmd);
-	
-	//do the parallel commands in here
-	if(ampersand_found == true){
-		/*can either store the tokens in the parallel command arrray, find the executable, and fork and exec like usual
-		OR immediately run a command once we find one */
-	}
 
 	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
