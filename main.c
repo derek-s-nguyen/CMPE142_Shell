@@ -81,14 +81,12 @@ int forknife_launch(char **args)
 	
 	//check if there's any ampersand 
 	while(args[parallel_counter] != NULL){
-		if((strcmp(args[parallel_counter], ampersand)) == 0){
 		//ampersand
-			parallel_cmd[0] = null;
-			printf("You want to parallel huh\n");
-			strcat(parallel_cmd, args[(parallel_counter+1)]);
-			printf("command entered: %s \n", parallel_cmd);
-			ampersand_found = true;
-		}
+		parallel_cmd[0] = null;
+		printf("You want to parallel huh\n");
+		strcat(parallel_cmd, args[(parallel_counter)]);
+		printf("command entered: %s \n", parallel_cmd);
+		ampersand_found = true;
 		parallel_counter++;
 	}
 	
@@ -145,29 +143,29 @@ int forknife_launch(char **args)
 		if (pid == 0) {
 			//child process
 			if(carrot_found == true){
-			printf("found carrot\n");
-			close(STDOUT_FILENO); 
-			int fd = open(out_file, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-			printf("This printed into an output file");
-			printf("%d \n", fd);
-			int save_stdout = dup(1);
-			int save_stderr = dup(2);
-			dup2(fd, 1);
-			dup2(fd, 2);
-	
-			if(fd < 0){
-				printf("FILE ERROR");
+				printf("found carrot\n");
+				close(STDOUT_FILENO); 
+				int fd = open(out_file, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+				printf("This printed into an output file");
+				printf("%d \n", fd);
+				int save_stdout = dup(1);
+				int save_stderr = dup(2);
+				dup2(fd, 1);
+				dup2(fd, 2);
+		
+				if(fd < 0){
+					printf("FILE ERROR");
+				}
+				char *myargs[2] = {wholename, NULL};
+							
+				execvp(myargs[0], myargs);
+				
+				dup2(save_stdout, fd);
+				dup2(save_stderr, fd);
 			}
-			char *myargs[2] = {wholename, NULL};
-						
-			execvp(myargs[0], myargs);
-			
-			dup2(save_stdout, fd);
-			dup2(save_stderr, fd);
-		}
-		else if(execv(wholename, args) == -1) {
+			else if(execv(wholename, args) == -1) {
 				perror("forknife");
-		}
+			}
 			exit(EXIT_FAILURE);
 		} else if (pid < 0) {
 			//error forking
