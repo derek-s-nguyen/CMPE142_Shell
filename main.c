@@ -86,6 +86,7 @@ int forknife_launch(char **args)
 	bool carrot_found = false;
 	bool ampersand_found = false;
 	char ampersand[3] ="&";
+
 	int arry_counter = 0;
 	char parallel_cmd[512];
 	char parallel_args[20][200];
@@ -106,13 +107,13 @@ int forknife_launch(char **args)
 				parallel_counter = parallel_counter + 1;
 				arry_counter = arry_counter + 1;
 			}
-			strcat(parallel_args[arry_counter][], args[parallel_counter]);
-			strcat(parallel_args[arry_counter][], " ");
+			strcat(parallel_args[arry_counter], args[parallel_counter]);
 			parallel_counter++;
 		}
 	}
+
 	for(int f = 0; f < arry_counter; f++){
-		printf("parallel argument %d: %s\n", arry_counter, parallel_args[f][]);
+		printf("Argument %d: %s\n", f, parallel_args[f]);
 	}
 	
 	// printf("%s \n", parallel_cmd);
