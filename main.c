@@ -75,9 +75,11 @@ int forknife_launch(char **args)
 	char *next_piece;
 	int parallel_counter = 0;
 	bool carrot_found = false;
+	bool ampersand_found = false;
 	char ampersand[3] ="&";
 	char parallel_cmd[512];
 	
+	//check if there's any ampersand 
 	while(args[parallel_counter] != NULL){
 		if((strcmp(args[parallel_counter], ampersand)) == 0){
 		//ampersand
@@ -85,10 +87,10 @@ int forknife_launch(char **args)
 		printf("You want to parallel huh\n");
 		strcat(parallel_cmd, args[(parallel_counter+1)]);
 		printf("command entered: %s \n", parallel_cmd);
+		ampersand_found = true;
 		}
 		parallel_counter++;
-	}	
-	
+	}
 	
 	printf("%s \n", parallel_cmd);
 
@@ -109,6 +111,9 @@ int forknife_launch(char **args)
 		out_counter = (out_counter + 1);
 
 	}
+	
+	/*This general code just adds the command at the end of the path after tokening the command line. After that, it searches for an exectuable. If it doesn't at first, there
+	will be a loop that makes sure that there is no executable to be found. But, if there is one -- we will fork it and exec it if fork == 0*/
 
 	strncpy(temp, path, 511);
 
