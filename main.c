@@ -8,6 +8,7 @@
 #include <sys/wait.h>
 #include <sys/types.h>
 #include <sys/dir.h>
+#include <stdbool.h>
 
 int forknife_cd(char **args);
 int forknife_path(char **args);
@@ -72,6 +73,8 @@ int forknife_launch(char **args)
 	char wholename[512];
 	char temp[512];
 	char *next_piece;
+	
+	bool carrot_found = false;
 
 	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
@@ -82,15 +85,14 @@ int forknife_launch(char **args)
 			printf("You want to redirect output, huh\n");
 			strcat(out_file, args[(out_counter+1)]); //put the file name into out_file
 			printf("This is where you said you want output going to: %s\n", out_file);
-			//right_arrow_counter = 0;
+			carrot_found = true;
 			break;
 	
 	}
 
 		out_counter = (out_counter + 1);
+
 	}
-
-
 
 	strncpy(temp, path, 511);
 
@@ -119,20 +121,34 @@ int forknife_launch(char **args)
 			}
 		}
 	}
-
 	if(found) {
 		printf("Gonna fork and execv for: %s\n", wholename);
 		pid = fork();
+		printf("should be redircting \n");
 		if (pid == 0) {
 			//child process
-			if(args[out_counter] == ">"){
+			if(carrot_found == true){
+			printf("found carrot\n");
 			close(STDOUT_FILENO); 
-			open("./main.output", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-			char *myargs[3];
-        	myargs[0] = strdup("wholename");   // storing the command into the first slot
-        	myargs[1] = strdup("out_file"); // our destination
-        	myargs[2] = NULL;           // marks end of array
-        	execvp(myargs[0], myargs);
+			int fd = open(out_file, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+			printf("This printed into an output file");
+			printf("%d \n", fd);
+			int save_stdout = dup(1);
+			dup2(fd, 1);
+	
+			if(fd < 0){
+				printf("FILE ERROR");
+			}
+			char *myargs[2] = {wholename, NULL};
+        		/*myargs[0] = strdup(wholename);   // storing the command into the first slot
+        		myargs[1] = strdup(out_file); // our destination
+        		myargs[2] = NULL;           // marks end of array*/
+						
+			execvp(myargs[0], myargs);
+			
+
+			dup2(1, fd);
+
 		}
 		else if(execv(wholename, args) == -1) {
 				perror("forknife");
