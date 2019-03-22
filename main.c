@@ -67,14 +67,30 @@ int forknife_launch(char **args)
 
 	char right_arrow[3] = ">", null = '\0', out_file[512];
 	int  redir_output = 0, out_counter = 0;
-
+	int i = 0;
 	int status;
 	int found = 0;
 	char wholename[512];
 	char temp[512];
 	char *next_piece;
-	
+	int parallel_counter = 0;
 	bool carrot_found = false;
+	char ampersand[3] ="&";
+	char parallel_cmd[512];
+	
+	while(args[parallel_counter] != NULL){
+		if((strcmp(args[parallel_counter], ampersand)) == 0){
+		//ampersand
+		parallel_cmd[0] = null;
+		printf("You want to parallel huh\n");
+		strcat(parallel_cmd, args[(parallel_counter+1)]);
+		printf("command entered: %s \n", parallel_cmd);
+		}
+		parallel_counter++;
+	}	
+	
+	
+	printf("%s \n", parallel_cmd);
 
 	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
@@ -88,8 +104,8 @@ int forknife_launch(char **args)
 			carrot_found = true;
 			break;
 	
-	}
-
+		}
+		
 		out_counter = (out_counter + 1);
 
 	}
@@ -134,21 +150,19 @@ int forknife_launch(char **args)
 			printf("This printed into an output file");
 			printf("%d \n", fd);
 			int save_stdout = dup(1);
+			int save_stderr = dup(2);
 			dup2(fd, 1);
+			dup2(fd, 2);
 	
 			if(fd < 0){
 				printf("FILE ERROR");
 			}
 			char *myargs[2] = {wholename, NULL};
-        		/*myargs[0] = strdup(wholename);   // storing the command into the first slot
-        		myargs[1] = strdup(out_file); // our destination
-        		myargs[2] = NULL;           // marks end of array*/
 						
 			execvp(myargs[0], myargs);
 			
-
-			dup2(1, fd);
-
+			dup2(save_stdout, fd);
+			dup2(save_stderr, fd);
 		}
 		else if(execv(wholename, args) == -1) {
 				perror("forknife");
@@ -215,6 +229,7 @@ char **forknife_split_line(char *line){
 	token = strtok(line, FORKNIFE_TOK_TOK_DELIM);
 	while(token != NULL){
 		tokens[position] = token;
+		printf("%s \n", tokens[position]);
 		position++;	
 
 	if(position >= bufsize) {
