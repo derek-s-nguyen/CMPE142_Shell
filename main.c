@@ -74,7 +74,7 @@ int forknife_launch(char **args)
 {
 	pid_t pid;
 
-	char right_arrow[3] = ">", null = '\0', out_file[512];
+	char right_arrow[3] = ">", null = '\0', out_file[512], double_right_arrow[3] = ">>";
 	int  redir_output = 0, out_counter = 0;
 	int i = 0;
 	int status;
@@ -89,7 +89,7 @@ int forknife_launch(char **args)
 	char parallel_cmd[512];
 	
 	//check if there's any ampersand 
-	while(args[parallel_counter] != NULL){
+	/*while(args[parallel_counter] != NULL){
 		//ampersand
 		parallel_cmd[0] = null;
 		printf("You want to parallel huh\n");
@@ -97,7 +97,7 @@ int forknife_launch(char **args)
 		printf("command entered: %s \n", parallel_cmd);
 		ampersand_found = true;
 		parallel_counter++;
-	}
+	}*/
 	
 	// printf("%s \n", parallel_cmd);
 	
@@ -113,11 +113,36 @@ int forknife_launch(char **args)
 			//found >
 			out_file[0] = null;
 			printf("You want to redirect output, huh\n");
-			strcat(out_file, args[(out_counter+1)]); //put the file name into out_file
-			printf("This is where you said you want output going to: %s\n", out_file);
-			carrot_found = true;
-			break;
+
+			if(strcmp(args[out_counter+1], right_arrow) == 0){//checks for carrot again
+				printf("%s \n", args[out_counter+1]);
+				print_error();
+				carrot_found = false;
+				break;				
+			}
+			else {	
+				
+				strcat(out_file, args[(out_counter+1)]);
+				if(args[out_counter+2] != null){
+					printf("%s \n", args[out_counter+2]);
+					print_error();
+					printf("second argument found \n");
+					carrot_found = false;
+					break;			
+				}
+				carrot_found = true;
+				break;
+				
+			}
 		}
+		else if(strcmp(args[out_counter], double_right_arrow) == 0){
+			printf("%s \n", args[out_counter+1]);
+			print_error();
+			printf(">> found\n");
+			carrot_found = false;
+			break;	
+		}
+
 		out_counter = (out_counter + 1);
 	}
 	
@@ -236,6 +261,7 @@ char **forknife_split_line(char *line){
 	token = strtok(line, FORKNIFE_TOK_TOK_DELIM);
 	while(token != NULL){
 		tokens[position] = token;
+		printf("%s \n",tokens[position]);
 		position++;	
 
 	if(position >= bufsize) {
