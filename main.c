@@ -108,6 +108,7 @@ int forknife_launch(char **args)
 				arry_counter = arry_counter + 1;
 			}
 			strcat(parallel_args[arry_counter], args[parallel_counter]);
+			strcat(parallel_args[arry_counter], " ");
 			parallel_counter++;
 		}
 	}
