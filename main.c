@@ -206,9 +206,12 @@ int forknife_launch(char **args)
 				if(fd < 0){
 					print_error();
 				}
-				char *myargs[2] = {wholename, NULL};
+				args[out_counter] = '\0';
 							
-				execvp(myargs[0], myargs);
+				if(execv(wholename, args) == -1) {
+					print_error();
+				}
+				exit(EXIT_FAILURE);
 				
 				dup2(save_stdout, fd);
 				dup2(save_stderr, fd);
