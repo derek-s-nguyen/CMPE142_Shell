@@ -103,7 +103,7 @@ int forknife_launch(char **args)
 	parallel_counter = 0;
 	if(ampersand_found){//if there's an ampersand in the args
 		while(args[parallel_counter] != NULL){//traverse through args
-			if((strcmp(args[parallel_counter], ampersand)) != 0){//if you hit an ampersand, increment the args by 1 and start entering in next array
+			if((strcmp(args[parallel_counter], ampersand)) == 0){//if you hit an ampersand, increment the args by 1 and start entering in next array
 				parallel_counter = parallel_counter + 1;
 				arry_counter = arry_counter + 1;
 			}
@@ -112,7 +112,7 @@ int forknife_launch(char **args)
 		}
 	}
 
-	for(int f = 0; f < arry_counter; f++){
+	for(int f = 0; f <= arry_counter; f++){
 		printf("Argument %d: %s\n", f, parallel_args[f]);
 	}
 	
