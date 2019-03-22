@@ -118,7 +118,7 @@ int forknife_launch(char **args)
 				printf("%s \n", args[out_counter+1]);
 				print_error();
 				carrot_found = false;
-				break;				
+				return 1;				
 			}
 			else {	
 				
@@ -128,7 +128,7 @@ int forknife_launch(char **args)
 					print_error();
 					printf("second argument found \n");
 					carrot_found = false;
-					break;			
+					return 1;			
 				}
 				carrot_found = true;
 				break;
@@ -140,7 +140,7 @@ int forknife_launch(char **args)
 			print_error();
 			printf(">> found\n");
 			carrot_found = false;
-			break;	
+			return 1;	
 		}
 
 		out_counter = (out_counter + 1);
