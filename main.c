@@ -123,7 +123,7 @@ int forknife_launch(char **args)
 			else {	
 				
 				strcat(out_file, args[(out_counter+1)]);
-				if(args[out_counter+2] != null){
+				if(args[out_counter+2] != NULL){
 					printf("%s \n", args[out_counter+2]);
 					print_error();
 					printf("second argument found \n");
