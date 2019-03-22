@@ -76,13 +76,11 @@ int forknife_launch(char **args)
 	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
 		
-		if(strcmp(args[out_counter], right_arrow) == 0) {
-			
-			
+		if(strcmp(args[out_counter], right_arrow) == 0) {	
 			//found >
 			out_file[0] = null;
 			printf("You want to redirect output, huh\n");
-			strcat(out_file, args[(out_counter+1)]);//put the file name into out_file
+			strcat(out_file, args[(out_counter+1)]); //put the file name into out_file
 			printf("This is where you said you want output going to: %s\n", out_file);
 			//right_arrow_counter = 0;
 			break;
@@ -93,6 +91,7 @@ int forknife_launch(char **args)
 	}
 
 
+
 	strncpy(temp, path, 511);
 
 	printf("path variable currently contains: %s\n", path);
@@ -101,6 +100,8 @@ int forknife_launch(char **args)
 
 	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 	printf("Looking for: %s\n", wholename);
+	printf("%s\n", next_piece);
+
 	if(access(wholename, X_OK) == 0) {
 		printf("YAY, found executable in: %s\n", wholename);
 		found = 1;//found executable
@@ -118,14 +119,24 @@ int forknife_launch(char **args)
 			}
 		}
 	}
+
 	if(found) {
 		printf("Gonna fork and execv for: %s\n", wholename);
 		pid = fork();
 		if (pid == 0) {
 			//child process
-			if(execv(wholename, args) == -1) {
+			if(args[out_counter] == ">"){
+			close(STDOUT_FILENO); 
+			open("./main.output", O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
+			char *myargs[3];
+        	myargs[0] = strdup("wholename");   // storing the command into the first slot
+        	myargs[1] = strdup("out_file"); // our destination
+        	myargs[2] = NULL;           // marks end of array
+        	execvp(myargs[0], myargs);
+		}
+		else if(execv(wholename, args) == -1) {
 				perror("forknife");
-			}
+		}
 			exit(EXIT_FAILURE);
 		} else if (pid < 0) {
 			//error forking
