@@ -86,18 +86,34 @@ int forknife_launch(char **args)
 	bool carrot_found = false;
 	bool ampersand_found = false;
 	char ampersand[3] ="&";
+	int arry_counter = 0;
 	char parallel_cmd[512];
+	char parallel_args[20][200];
 	
 	//check if there's any ampersand 
-	/*while(args[parallel_counter] != NULL){
+	while(args[parallel_counter] != NULL){
+		if((strcmp(args[parallel_counter], ampersand)) == 0){
 		//ampersand
-		parallel_cmd[0] = null;
-		printf("You want to parallel huh\n");
-		strcat(parallel_cmd, args[(parallel_counter)]);
-		printf("command entered: %s \n", parallel_cmd);
-		ampersand_found = true;
+			ampersand_found = true;
+			break;
+		}
 		parallel_counter++;
-	}*/
+	}
+	parallel_counter = 0;
+	if(ampersand_found){//if there's an ampersand in the args
+		while(args[parallel_counter] != NULL){//traverse through args
+			if((strcmp(args[parallel_counter], ampersand)) != 0){//if you hit an ampersand, increment the args by 1 and start entering in next array
+				parallel_counter = parallel_counter + 1;
+				arry_counter = arry_counter + 1;
+			}
+			strcat(parallel_args[arry_counter][], args[parallel_counter]);
+			strcat(parallel_args[arry_counter][], " ");
+			parallel_counter++;
+		}
+	}
+	for(int f = 0; f < arry_counter; f++){
+		printf("parallel argument %d: %s\n", arry_counter, parallel_args[f][]);
+	}
 	
 	// printf("%s \n", parallel_cmd);
 	
