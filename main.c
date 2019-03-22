@@ -14,19 +14,28 @@ int forknife_cd(char **args);
 int forknife_path(char **args);
 int forknife_exit(char **args);
 char path[512] = "/bin";
+char error_message[30] = "An error has occured\n";
+
+void print_error(void){
+	write(STDERR_FILENO, error_message, strlen(error_message));
+
+}
 
 //built-in commands are placed into the char array 'builtin_str[]'
 //the pointer function 'builtin_func[]' contains the commands and corresponding functions
 char *builtin_str[] ={ "cd", "path", "exit" };
+
 int (*builtin_func[])(char **) = {
 	&forknife_cd,
 	&forknife_path,
 	&forknife_exit
 };
+
+
 int forknife_cd(char **args){
 
 if(args[1] == NULL){
-fprintf(stderr, "forknife: expected argument to \"cd\"\n");
+print_error();
 }
 
 else{
