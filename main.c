@@ -17,7 +17,7 @@ int forknife_cd(char **args);
 int forknife_path(char **args);
 int forknife_exit(char **args);
 char path[512] = "/bin";
-char error_message[30] = "An error has occured\n";
+char error_message[30] = "An error has occurred\n";
 
 void print_error(void){
 	write(STDERR_FILENO, error_message, strlen(error_message));
