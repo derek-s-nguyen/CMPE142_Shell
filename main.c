@@ -71,7 +71,14 @@ int forknife_path(char **args){
 //this is a built-in command to exit by returning zero
 int forknife_exit(char **args)
 {
-	return 0;
+	if(args[1] != NULL)
+	{
+		print_error();
+		return 1;
+	}
+	else{
+		return 0;
+	}
 }
 
 //function that will launch a program and wait for it to terminate
