@@ -125,10 +125,8 @@ int forknife_launch(char **args)
 		if(strcmp(args[out_counter], right_arrow) == 0) {	
 			//found >
 			out_file[0] = null;
-			printf("You want to redirect output, huh\n");
-
 			if(strcmp(args[out_counter+1], right_arrow) == 0){//checks for carrot again
-				printf("%s \n", args[out_counter+1]);
+//				printf("%s \n", args[out_counter+1]);
 				print_error();
 				carrot_found = false;
 				return 1;				
@@ -137,9 +135,7 @@ int forknife_launch(char **args)
 				
 				strcat(out_file, args[(out_counter+1)]);
 				if(args[out_counter+2] != NULL){
-					printf("%s \n", args[out_counter+2]);
 					print_error();
-					printf("second argument found \n");
 					carrot_found = false;
 					return 1;			
 				}
@@ -149,9 +145,9 @@ int forknife_launch(char **args)
 			}
 		}
 		else if(strcmp(args[out_counter], double_right_arrow) == 0){
-			printf("%s \n", args[out_counter+1]);
+//			printf("%s \n", args[out_counter+1]);
 			print_error();
-			printf(">> found\n");
+//			printf(">> found\n");
 			carrot_found = false;
 			return 1;	
 		}
@@ -164,13 +160,13 @@ int forknife_launch(char **args)
 
 	strncpy(temp, path, 511);
 
-	printf("path variable currently contains: %s\n", path);
+//	printf("path variable currently contains: %s\n", path);
 	next_piece = strtok(temp, ":");
-	printf("next directory to check with 'access()': %s\n", next_piece);
+//	printf("next directory to check with 'access()': %s\n", next_piece);
 
 	snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
-	printf("Looking for: %s\n", wholename);
-	printf("%s\n", next_piece);
+//	printf("Looking for: %s\n", wholename);
+//	printf("%s\n", next_piece);
 
 	if(access(wholename, X_OK) == 0) {
 		found = 1;//found executable
@@ -180,7 +176,7 @@ int forknife_launch(char **args)
 			next_piece = strtok(NULL, ":");
 			snprintf(wholename, 511, "%s/%s", next_piece, args[0]);
 			if(access(wholename, X_OK) == 0) {
-				printf("YAY, found executable in: %s\n", wholename);
+//				printf("YAY, found executable in: %s\n", wholename);
 				found = 1; //found executable
 				break;
 			}
@@ -193,7 +189,7 @@ int forknife_launch(char **args)
 			if(carrot_found == true){	
 				close(STDOUT_FILENO); 
 				int fd = open(out_file, O_CREAT|O_WRONLY|O_TRUNC, S_IRWXU);
-				printf("%d \n", fd);
+//				printf("%d \n", fd);
 				int save_stdout = dup(1);
 				int save_stderr = dup(2);
 				dup2(fd, 1);
@@ -272,21 +268,21 @@ char **forknife_split_line(char *line){
 	token = strtok(line, FORKNIFE_TOK_TOK_DELIM);
 	while(token != NULL){
 		tokens[position] = token;
-		printf("%s \n",tokens[position]);
+//		printf("%s \n",tokens[position]);
 		position++;	
 
-	if(position >= bufsize) {
-		bufsize += FORKNIFE_TOK_BUFSIZE;
-		tokens = realloc(tokens, bufsize * sizeof(char*));
-		if(!tokens) {
-			fprintf(stderr, "allocation error\n");
-			exit(EXIT_FAILURE);
+		if(position >= bufsize) {
+			bufsize += FORKNIFE_TOK_BUFSIZE;
+			tokens = realloc(tokens, bufsize * sizeof(char*));
+			if(!tokens) {
+				fprintf(stderr, "allocation error\n");
+				exit(EXIT_FAILURE);
+			}
 		}
-	}
 
-	token = strtok(NULL, FORKNIFE_TOK_TOK_DELIM);
+		token = strtok(NULL, FORKNIFE_TOK_TOK_DELIM);
 	
-	}//while
+	}
 	tokens[position] = NULL;
 	return tokens;
 }//splitline
