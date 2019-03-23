@@ -79,14 +79,11 @@ int forknife_launch(char **args)
 {
 	pid_t pid;
 
-	char right_arrow[3] = ">", null = '\0', out_file[512], double_right_arrow[3] = ">>";
+	char null = '\0';
 	int  redir_output = 0, out_counter = 0;
 	int i = 0;
 	int j = 0;
-	int status;
 	int found = 0;
-	char wholename[512];
-	char temp[512];
 	char *next_piece;
 	int parallel_counter = 0;
 	bool carrot_found = false;
@@ -96,7 +93,7 @@ int forknife_launch(char **args)
 	int status_of_command = 1;
 
 	int arry_counter = 0;
-	char parallel_args[20][200];
+	char parallel_args[10][100];
 /*	for(int k = 0; k < 200; k++){
 		parallel_args[k][0] = "\0";
 	}	
@@ -124,10 +121,10 @@ int forknife_launch(char **args)
 			parallel_counter++;
 		}
 		strcat(parallel_args[arry_counter], "\0");
-		for(int f = 0; f <= arry_counter; f++){
+/*		for(int f = 0; f <= arry_counter; f++){
 			printf("Argument %d: %s\n", f, parallel_args[f]);
 		}
-		while((j <= arry_counter) & (status_of_command)){
+*/		while((j <= arry_counter) & (status_of_command)){
 			char *line;
 			status_of_command = 0;
 			line = parallel_args[j];
@@ -155,11 +152,6 @@ int forknife_command(char **args)
 	char *next_piece;
 	int parallel_counter = 0;
 	bool carrot_found = false;
-	bool ampersand_found = false;
-	char ampersand[3] ="&";
-
-	int arry_counter = 0;
-	char parallel_args[20][200];	
 
 	//checking for right arrow (input)
 	while(args[out_counter] != NULL){
@@ -170,7 +162,7 @@ int forknife_command(char **args)
 //				printf("%s \n", args[out_counter+1]);
 				print_error();
 				carrot_found = false;
-				return 1;				
+				return 0;				
 			}
 			else {	
 				
@@ -178,7 +170,7 @@ int forknife_command(char **args)
 				if(args[out_counter+2] != NULL){
 					print_error();
 					carrot_found = false;
-					return 1;			
+					return 0;			
 				}
 				carrot_found = true;
 				break;
@@ -190,7 +182,7 @@ int forknife_command(char **args)
 			print_error();
 //			printf(">> found\n");
 			carrot_found = false;
-			return 1;	
+			return 0;	
 		}
 
 		out_counter = (out_counter + 1);
@@ -266,7 +258,7 @@ int forknife_command(char **args)
 	}
 	else {
 		print_error();
-		return 1;
+		return 0;
 	}
 
 }
