@@ -117,7 +117,7 @@ int forknife_launch(char **args)
 	}
 
 	for(int f = 0; f <= arry_counter; f++){
-		printf("Argument %d: %s\n", f, parallel_args[f]);
+//		printf("Argument %d: %s\n", f, parallel_args[f]);
 	}
 
 	//checking for right arrow (input)
