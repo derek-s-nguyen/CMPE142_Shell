@@ -10,6 +10,9 @@
 #include <sys/dir.h>
 #include <stdbool.h>
 
+#define FORKNIFE_TOK_BUFSIZE 64
+#define FORKNIFE_TOK_TOK_DELIM " \t\r\n\a"
+#define FORKNIFE_RL_BUFSIZE 1024
 int forknife_cd(char **args);
 int forknife_path(char **args);
 int forknife_exit(char **args);
@@ -248,8 +251,6 @@ int forknife_execute(char **args)
 	}
 	return forknife_launch(args);//otherwise, execv
 }
-
-#define FORKNIFE_RL_BUFSIZE 1024
 char *forknife_read_line(void)
 {
 	char *line = NULL;
@@ -257,9 +258,6 @@ char *forknife_read_line(void)
 	getline(&line, &bufsize, stdin);
 	return line;
 }
-
-#define FORKNIFE_TOK_BUFSIZE 64
-#define FORKNIFE_TOK_TOK_DELIM " \t\r\n\a"
 
 char **forknife_split_line(char *line){
 	int bufsize = FORKNIFE_TOK_BUFSIZE, position = 0;
@@ -316,6 +314,5 @@ int main(int argc, char **argv) {
 	forknife_loop();
 
 	return EXIT_SUCCESS;
-
 }
 
